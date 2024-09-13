@@ -13,6 +13,26 @@
 #include "../../include/minishell.h"
 
 /*
+ * Returns the exit status based on whether the process
+ * was terminated by a signal.
+ * If the process was signaled the exit code is 128 + signal number.
+ * Else the exit code returned as-is.
+ */
+
+int	exit_status_code(int exit_code)
+{
+	if (WIFSIGNALED(exit_code))
+	{
+		if (WTERMSIG(exit_code) == SIGINT)
+			write (1, "\n", 1);
+		else if (WTERMSIG(exit_code) == SIGQUIT)
+			printf("Quit: 3\n");
+		return (128 + WTERMSIG(exit_code));
+	}
+	return (WEXITSTATUS(exit_code));
+}
+
+/*
  * check_arg: check whether the argument is numeric.
  * if not exit print error and exit with 255 exit status.
  *

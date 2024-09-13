@@ -147,6 +147,9 @@ void	increment_shlvl(t_envp **env);
 int		execute_cmd(char **cmd, char *env[], t_shell *sh, t_ast *ast);
 
 char	*ps1_prompt(char *pwd, char *home, int exit_status);
+char	*check_cwd_valid(t_envp **env);
+char	*remove_last_dir(char *pwd);
+char	**ls_colored(char **cmds);
 
 int		check_line(const char *str);
 int		exit_status_code(int exit_code);

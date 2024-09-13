@@ -39,6 +39,7 @@ void	command_loop(t_envp *envp, char *str, t_shell sh)
 	char	*prev_line;
 
 	prev_line = NULL;
+	tcgetattr(STDIN_FILENO, &sh.og_ter_attr);
 	while (1)
 	{
 		init_signal(&sh.exit_status);
@@ -56,6 +57,7 @@ void	command_loop(t_envp *envp, char *str, t_shell sh)
 		}
 		if (process_commands(&sh, str))
 			continue ;
+		tcsetattr(STDIN_FILENO, TCSANOW | TCSAFLUSH, &sh.og_ter_attr);
 		free(str);
 	}
 }

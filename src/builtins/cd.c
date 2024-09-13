@@ -12,10 +12,6 @@
 
 #include "../../include/minishell.h"
 
-/*
- * print_error: prints the error message str.
- */
-
 int	print_error(char *str, char *arg)
 {
 	if (str && !arg)
@@ -103,6 +99,9 @@ int	change_dir(char *pwd, t_envp **env)
 	char	*dir;
 	char	*new_dir;
 
+	new_dir = check_cwd_valid(env);
+	if (!new_dir)
+		return (1);
 	new_dir = trim_string(pwd, ft_split(pwd, "/"));
 	if (!access(new_dir, F_OK))
 	{

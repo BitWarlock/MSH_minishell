@@ -116,5 +116,6 @@ char	**check_expand(char **args, t_shell *sh, t_token *token)
 		return (NULL);
 	args = loop_expand(args, sh, token, is_null);
 	args = remove_null_values(args, is_null);
-	return (wildcard_expansion(args, token));
+	args = wildcard_expansion(args, token);
+	return (args);
 }

@@ -12,6 +12,15 @@
 
 #include "../../include/minishell.h"
 
+void	heredoc_apply(t_ast *ast, t_shell *sh)
+{
+	if (!ast || ast->token->name != HERE_DOC)
+		return ;
+	copy_to_stdin(sh->doc_files[ast->token->doc_num]);
+	traverse_tree(ast->left, sh);
+	doc_close(ast, sh, ast->token->doc_num);
+}
+
 void	fill_doc_files(t_shell *sh)
 {
 	int	size;

@@ -12,6 +12,14 @@
 
 #include "../../include/minishell.h"
 
+/*
+ * Traverses the abstract syntax tree (AST) and applies various shell operations.
+ * 
+ * If the AST is valid and no fork error has occurred, the function sequentially
+ * executes logical operations ('AND', 'OR'), pipe handling, redirections,
+ * heredoc processing, and command execution.
+ */
+
 void	traverse_tree(t_ast *ast, t_shell *sh)
 {
 	if (!ast || sh->fork_err)
@@ -21,12 +29,6 @@ void	traverse_tree(t_ast *ast, t_shell *sh)
 	redirect_out(ast, sh);
 	redirect_app(ast, sh);
 	redirect_in(ast, sh);
-	if (ast->token->name == HERE_DOC)
-	{
-		copy_to_stdin(sh->doc_files[ast->token->doc_num]);
-		traverse_tree(ast->left, sh);
-		doc_close(ast, sh, ast->token->doc_num);
-	}
+	heredoc_apply(ast, sh);
 	command(ast, sh);
-	return ;
 }

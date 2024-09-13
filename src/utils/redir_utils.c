@@ -12,6 +12,21 @@
 
 #include "../../include/minishell.h"
 
+void	fork_failed(int fork_err)
+{
+	if (!fork_err)
+		perror("fork");
+	fork_err = 1;
+	return ;
+}
+
+void	dup_stin(int *fd)
+{
+	close(fd[0]);
+	dup2(fd[1], STDOUT_FILENO);
+	close(fd[1]);
+}
+
 int	set_exit_error(t_shell *sh, char *file, char *msg)
 {
 	sh->exit_status = print_error(file, msg);

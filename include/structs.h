@@ -65,6 +65,7 @@ typedef struct s_shell
 	int				is_heredoc;
 	t_envp			*env;
 	t_ast			*ast;
+	struct termios	og_ter_attr;
 }		t_shell;
 
 #endif // !STRUCTS_H

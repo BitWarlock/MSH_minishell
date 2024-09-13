@@ -20,6 +20,7 @@ void	expand_arg_entries(char **args, size_t *entry_i, char *pattern);
 void	second_child(t_ast *ast, t_shell *sh, int *fd, int *status);
 void	and_or_operators(t_ast *ast, t_shell *sh);
 void	doc_close(t_ast *ast, t_shell *sh, int i);
+void	heredoc_apply(t_ast *ast, t_shell *sh);
 void	pipe_operator(t_ast *ast, t_shell *sh);
 void	redirect_out(t_ast *ast, t_shell *sh);
 void	redirect_app(t_ast *ast, t_shell *sh);
@@ -29,6 +30,7 @@ void	here_doc(t_ast *ast, t_shell *sh);
 void	command(t_ast *ast, t_shell *sh);
 void	copy_to_stdin(char *tmp_file);
 void	fork_failed(int fork_err);
+void	dup_stin(int *fd);
 
 char	*expand_in_heredoc(char *var, t_shell *sh, int expand_flag);
 char	**check_expand(char **args, t_shell *sh, t_token *token);

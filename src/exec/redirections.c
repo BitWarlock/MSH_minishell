@@ -12,6 +12,16 @@
 
 #include "../../include/minishell.h"
 
+/*
+ * Redirects standard input or output based on the operation,
+ *	and traverse_tree left to executes the command.
+ *
+ * (redirect_out) and (redirect_app): redirects standard output
+ *	to a file (overwriting or appending to it's content).
+ *
+ * (redirect_in): redirects standard input from a file.
+ */
+
 void	redirect_out(t_ast *ast, t_shell *sh)
 {
 	int		fd;

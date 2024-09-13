@@ -11,16 +11,15 @@
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-#include <stdlib.h>
-#include <unistd.h>
 
-void	fork_failed(int fork_err)
-{
-	if (!fork_err)
-		perror("fork");
-	fork_err = 1;
-	return ;
-}
+/*
+ * Fork two processes for a piped command.
+ * The first child handles the left side of the pipe.
+ *	redirecting its output to the pipe.
+ * The second child handles the right side.
+ * Waits for both child processes to complete.
+ * Updates the shell's exit status.
+ */
 
 void	second_child(t_ast *ast, t_shell *sh, int *fd, int *status)
 {
@@ -42,13 +41,6 @@ void	second_child(t_ast *ast, t_shell *sh, int *fd, int *status)
 	close(fd[1]);
 	waitpid(pid, status, 0);
 	sh->exit_status = exit_status_code(*status);
-}
-
-void	dup_stin(int *fd)
-{
-	close(fd[0]);
-	dup2(fd[1], STDOUT_FILENO);
-	close(fd[1]);
 }
 
 void	pipe_operator(t_ast *ast, t_shell *sh)

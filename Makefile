@@ -11,39 +11,27 @@
 # **************************************************************************** #
 
 USER			:= $(shell whoami)
+ERASE			= \033[2K\r
 ORANGE			= \033[38;5;214m
-COLOR			= \033[38;5;51m
-RED			= \033[38;5;196m
-GREEN			= \033[32m
+TEAL			= \033[38;5;228m
+RED				= \033[38;5;196m
+GREEN			= \033[92m
+NEON			= \033[38;5;51m
+PURPLE			= \033[38;5;92;1m
 RESET			= \033[0m
 CFLAGS_R		= -O3 -Wall -Wextra -Werror -g -lreadline
 CFLAGS			= -O3 -Wall -Wextra -Werror -g
 NAME			= minishell
 LIB_DIR			= ./libft
 LIBFT			= $(LIB_DIR)/libft.a
-MAIN_SOURCES 		= src/utils/envp_list.c src/utils/char_utils.c src/builtins/unset_append.c \
-			src/utils/wildcard.c src/utils/wildcard_utils.c src/utils/expand.c \
-			src/parser_engine/syntax_analyser/quotes_balanced.c src/utils/gc.c \
-			src/utils/prompt_line.c src/parser_engine/tokenizer/classify.c \
-			src/parser_engine/tokenizer/multi.c src/utils/expand_remove.c \
-			src/utils/split/strlcpy.c src/utils/split/quoted.c src/list.c \
-			src/exec/and_or.c src/exec/redirections.c src/exec/command.c \
-			src/builtins/env.c src/builtins/pwd.c src/builtins/export.c \
-			src/parser_engine/syntax_analyser/check_tokenizer_output.c \
-			src/builtins/unset.c src/builtins/exit.c src/utils/free.c \
-			src/builtins/env_shlvl.c src/signal.c src/exec/traverse.c \
-			src/utils/strequal.c src/minishell_.c src/builtins/echo.c \
+MAIN_SOURCES 	= src/parser_engine/syntax_analyser/check_tokenizer_output.c \
 			src/parser_engine/tokenizer/make_irregular_arguments.c \
 			src/parser_engine/tokenizer/type_files_and_limiters.c \
-			src/utils/heredoc_utils.c src/utils/expand_heredoc.c \
 			src/parser_engine/parser/put_args_into_cmd_tokens.c \
-			src/exec/path.c src/exec/here_doc.c src/exec/pipe.c \
+			src/parser_engine/syntax_analyser/quotes_balanced.c \
 			src/parser_engine/parser/set_expansion_indices.c \
 			src/parser_engine/syntax_analyser/check_tokens.c \
-			src/utils/split/split.c src/utils/split/strlen.c \
-			src/utils/split/substr.c src/utils/split/strdup.c \
 			src/parser_engine/parser/connect_redirections.c \
-			src/utils/redir_utils.c src/builtins/export_u.c \
 			src/parser_engine/parser/build_redirections.c \
 			src/parser_engine/parser/build_redir_branch.c \
 			src/parser_engine/tokenizer/name_operators.c \
@@ -51,26 +39,74 @@ MAIN_SOURCES 		= src/utils/envp_list.c src/utils/char_utils.c src/builtins/unset
 			src/parser_engine/parser/set_env_var_ends.c \
 			src/parser_engine/parser/build_pipelines.c \
 			src/parser_engine/tokenizer/is_operator.c \
-			src/parser_engine/tokenizer/tokenize.c \
-			src/builtins/builtins.c src/builtins/cd.c \
 			src/parser_engine/parser/remove_quotes.c \
+			src/parser_engine/tokenizer/classify.c \
+			src/parser_engine/tokenizer/tokenize.c \
 			src/parser_engine/parser/build_list.c \
 			src/parser_engine/parser/fetch_ast.c \
+			src/parser_engine/tokenizer/multi.c \
 			src/parser_engine/parser/parse.c \
 			src/parser_engine/parser/para.c \
+			src/expand/expand_heredoc.c \
+			src/expand/wildcard_utils.c \
+			src/builtins/unset_append.c \
+			src/expand/expand_remove.c \
+			src/utils/heredoc_utils.c \
+			src/utils/split/strlcpy.c \
+			src/builtins/env_shlvl.c \
+			src/utils/split/strlen.c \
+			src/utils/split/quoted.c \
+			src/utils/split/substr.c \
+			src/utils/split/strdup.c \
+			src/utils/split/split.c \
+			src/utils/redir_utils.c \
+			src/builtins/export_u.c \
+			src/builtins/builtins.c\
+			src/exec/redirections.c \
+			src/utils/prompt_line.c \
+			src/utils/envp_list.c \
+			src/builtins/export.c \
+			src/utils/char_utils.c \
+			src/expand/wildcard.c \
+			src/utils/strequal.c \
+			src/builtins/unset.c \
+			src/builtins/exit.c \
+			src/expand/expand.c \
+			src/builtins/echo.c \
+			src/exec/traverse.c \
+			src/exec/here_doc.c\
+			src/exec/command.c \
+			src/builtins/env.c \
+			src/builtins/pwd.c \
+			src/builtins/cd.c \
+			src/exec/and_or.c \
+			src/minishell_.c \
+			src/exec/path.c \
+			src/exec/pipe.c \
+			src/utils/gc.c \
+			src/signal.c \
+			src/list.c \
 
 MAIN_OBJ 	= $(MAIN_SOURCES:.c=.o)
 
 HEADER 		= include/minishell.h include/structs.h include/exec.h include/builtins.h libft/libft.h
 
 define PRINT_LOADING
-	@printf "$(COLOR)Compiling src/$*.c... ["
-	@for i in $(shell seq 0 10); do \
-		printf "\r$(COLOR)Compiling src/$*.c... ["; \
-		for j in $$(seq 1 $$i); do printf "▓"; done; \
+	@for i in $(shell seq 0 15); do \
+		printf "\033[2K\r$(NEON)Compiling src/$*.c... $(NEON)[ "; \
+		for j in $$(seq 0 $$i); do printf "▓"; done; \
+		for j in $$(seq $$i 15); do printf " "; done; \
 		printf "]$(RESET)"; \
 	done; \
-	printf "$(GREEN)Done\n$(RESET)"
+	printf ""
+endef
+
+define MINISHELL_ART
+\n\033[38;5;214;7m\033[0m\
+\t\t\033[33;92;1m╔╦╗╦╔╗╔╦╔═╗╦ ╦╔═╗╦  ╦  \033[0m\n\
+\t\t\033[33;92;1m║║║║║║║║╚═╗╠═╣║╣ ║  ║  \033[0m\n\
+\t\t\033[33;92;1m╩ ╩╩╝╚╝╩╚═╝╩ ╩╚═╝╩═╝╩═╝\033[0m\n\
+\033[0m
 endef
 
 ifeq ($(USER), mrezki)
@@ -80,7 +116,8 @@ else
 endif
 
 all: $(NAME)
-	@echo "$(GREEN)Compiling completed$(RESET)"
+	@printf "%b\n" "$(value MINISHELL_ART)"
+	@echo "\t\t\t$(GREEN)IS READY$(RESET)"
 
 check: $(TARGET_TEST)
 
@@ -94,9 +131,7 @@ $(NAME): $(MAIN_OBJ) $(LIBFT)
 	@cc $^ -o $@ $(CFLAGS_R)
 
 $(LIBFT):
-	$(PRINT_LOADING)
 	@$(MAKE) -C $(LIB_DIR)
-	@echo "$(COLOR)libft Compiled$(RESET)"
 clean:
 	@echo "$(RED)Cleaning up...$(RESET)"
 	@$(RM) $(MAIN_OBJ)

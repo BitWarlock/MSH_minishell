@@ -12,6 +12,13 @@
 
 #include "../../include/minishell.h"
 
+/*
+ * Searches for the command in directories specified by
+ * the PATH environment variable.
+ * Returns the absolute path if the command is an absolute path.
+ * If the command is not found in any of the directories, NULL is returned.
+ */
+
 char	*join_path(char *path, char *cmd)
 {
 	char	*tmp;

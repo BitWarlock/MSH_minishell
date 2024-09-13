@@ -33,14 +33,17 @@ char	*ps1_prompt(char *pwd, char *home, int exit_status)
 	char	*prompt;
 	char	*tmp;
 
-	tmp = ORANGE"┏━"RED"🅼.🆂.🅷 "ORANGE"════«\e[30m"RED;
+	tmp = "\001"ORANGE"\002┏━\001"RED"\002🅼.🆂.🅷 \001"
+		ORANGE"\002════«\001\e[30m"RED"\002";
 	if (!pwd)
 		pwd = ft_strdup("");
 	prompt = ft_strjoin(tmp, simple_pwd(pwd, home));
 	if (!exit_status)
-		prompt = ft_strjoin(prompt, "\e[0m"ORANGE"»\n┗━"GREEN"☿️➠\e[0m ");
+		prompt = ft_strjoin(prompt, "\001\e[0m"ORANGE"\002»\n┗━☿️\001"
+				GREEN"\002➠\001\e[0m \002");
 	else
-		prompt = ft_strjoin(prompt, "\e[0m"ORANGE"»\n┗━"REDD"☿️➠\e[0m ");
+		prompt = ft_strjoin(prompt, "\001\e[0m"ORANGE"\002»\n┗━☿️\001"
+				REDD"\002➠\001\e[0m \002");
 	if (!prompt)
 		return (NULL);
 	return (prompt);
@@ -55,4 +58,42 @@ int	check_line(const char *str)
 		str++;
 	}
 	return (0);
+}
+
+char	**ls_colored(char **cmds)
+{
+	char	**new_cmds;
+	size_t	len;
+	size_t	i;
+
+	len = 0;
+	while (cmds[len])
+		len++;
+	new_cmds = gc_malloc(sizeof(char *) * (len + 2), COLLECT);
+	if (!new_cmds)
+		return (perror("malloc"), NULL);
+	new_cmds[0] = cmds[0];
+	new_cmds[1] = ft_strdup("-G");
+	i = 1;
+	while (i <= len)
+	{
+		new_cmds[i + 1] = cmds[i];
+		i++;
+	}
+	new_cmds[i] = NULL;
+	return (new_cmds);
+}
+
+char	*check_cwd_valid(t_envp **env)
+{
+	char	*tmp;
+
+	tmp = getcwd(NULL, 0);
+	if (tmp)
+		return (tmp);
+	print_error("cd: error retrieving current directory: ",
+			"getcwd: cannot access parent directories: No such file or directory");
+	change_env_value(env, "PWD", remove_last_dir(search_env(*env, "PWD")));
+	chdir(search_env(*env, "PWD"));
+	return (NULL);
 }
